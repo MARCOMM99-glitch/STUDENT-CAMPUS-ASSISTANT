@@ -3,126 +3,430 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#081521">
-  <meta name="description" content="A Phase-I problem-space review for the student information-management topic, aligned with the BMSIT&M IDT presentation guide.">
-  <title>Phase-I Problem Space Review | Team 17</title>
-  <link rel="stylesheet" href="styles.css?v=20261111-future">
-  <script src="app.js" defer></script>
+  <meta name="theme-color" content="#f5f6fb">
+  <meta name="description" content="CampusOne — a modern smart campus assistant dashboard for students.">
+  <title>CampusOne · Smart Campus Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #18223b;
+      --muted: #7d879d;
+      --line: #edf0f6;
+      --paper: #ffffff;
+      --canvas: #f5f6fb;
+      --violet: #7162ed;
+      --violet-dark: #5949d2;
+      --violet-soft: #f0eeff;
+      --mint: #dff8ee;
+      --green: #30b783;
+      --amber: #f2ab52;
+      --rose: #ec6f83;
+      --navy: #222344;
+      --shadow: 0 18px 46px rgba(37, 43, 82, .07);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 82% 0%, rgba(219, 213, 255, .55), transparent 32rem),
+        radial-gradient(ellipse at 15% 65%, rgba(222, 249, 240, .42), transparent 27rem),
+        var(--canvas);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    h1,h2,h3,h4,p { margin-top: 0; }
+    h1,h2,h3,h4,.brand-name,.metric-value { font-family: 'Manrope', 'DM Sans', sans-serif; }
+    button,input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .app-shell { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 258px; flex: 0 0 258px; padding: 28px 18px 22px; color: #fff;
+      background: linear-gradient(162deg, #292747 0%, #222441 52%, #202b48 100%);
+      display: flex; flex-direction: column; position: fixed; inset: 0 auto 0 0; z-index: 30;
+      overflow-y: auto;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 1px 12px 34px; }
+    .brand-mark { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(145deg,#9a8dff,#7364e9); box-shadow: 0 8px 18px #16162c66; }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-name { font-size: 17px; letter-spacing: -.55px; font-weight: 800; }
+    .brand-sub { display:block; font-size: 10px; letter-spacing: 1.1px; opacity: .53; margin-top: 1px; text-transform: uppercase; }
+    .nav-label { color: #9294b0; text-transform: uppercase; letter-spacing: 1.3px; font-size: 10px; font-weight: 700; padding: 0 14px; margin: 0 0 10px; }
+    .nav-list { display: grid; gap: 5px; }
+    .nav-link { display: flex; align-items: center; gap: 13px; border-radius: 13px; padding: 11px 13px; color: #b6b8cc; font-size: 13px; font-weight: 600; transition: .2s ease; }
+    .nav-link:hover { color: #fff; background: #ffffff0f; }
+    .nav-link.active { color: #fff; background: linear-gradient(100deg, #7769ef, #695cdb); box-shadow: 0 7px 20px #16162c55; }
+    .nav-link svg { width: 18px; height: 18px; flex: 0 0 18px; opacity: .9; }
+    .nav-badge { margin-left: auto; min-width: 21px; height: 21px; display: grid; place-items: center; border-radius: 8px; color: #fff; background: #ffffff20; font-size: 10px; }
+    .side-spacer { flex: 1; min-height: 25px; }
+    .help-card { margin: 10px 5px 20px; padding: 16px; border: 1px solid #ffffff12; border-radius: 17px; background: linear-gradient(145deg,#ffffff12,#ffffff07); }
+    .help-orb { display:grid; place-items:center; width:31px; height:31px; border-radius:11px; color:#b9b2ff; background:#8679ff27; margin-bottom:11px; }
+    .help-card strong { display:block; font-family:'Manrope',sans-serif; font-size:12px; margin-bottom:4px; }
+    .help-card p { color:#a9abc2; font-size:11px; margin:0 0 11px; }
+    .help-card a { color:#c9c4ff; font-size:11px; font-weight:700; }
+    .profile-mini { display:flex; gap:10px; align-items:center; border-top:1px solid #ffffff12; padding:18px 10px 0; }
+    .avatar { width:36px; height:36px; flex:0 0 36px; border-radius:13px; display:grid; place-items:center; color:#fff; font-weight:700; background:linear-gradient(145deg,#ffd0a6,#e7899a); }
+    .profile-mini strong { display:block; font-size:12px; font-weight:700; }
+    .profile-mini small { display:block; color:#a9abc2; font-size:10px; margin-top:2px; }
+    .main { width: calc(100% - 258px); margin-left:258px; min-width:0; }
+    .topbar { height:82px; padding:0 44px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(226,229,239,.78); background:rgba(250,250,253,.72); backdrop-filter:blur(16px); position:sticky; top:0; z-index:20; }
+    .crumb { color:var(--muted); font-size:12px; }
+    .crumb b { color:#3a4359; font-weight:700; }
+    .top-actions { display:flex; align-items:center; gap:13px; }
+    .search-wrap { position:relative; }
+    .search-wrap svg { position:absolute; width:16px; height:16px; color:#9ba3b5; left:14px; top:50%; transform:translateY(-50%); pointer-events:none; }
+    .search-input { width:236px; height:40px; border:1px solid #e9ebf3; background:#fff; border-radius:13px; outline:none; padding:0 12px 0 39px; color:var(--ink); font-size:12px; transition:.2s; }
+    .search-input:focus { border-color:#aaa0ff; box-shadow:0 0 0 3px #7162ed17; }
+    .search-input::placeholder { color:#a9afbf; }
+    .icon-button { width:40px; height:40px; display:grid; place-items:center; border:1px solid #e9ebf3; border-radius:13px; background:#fff; color:#727c92; position:relative; transition:.2s; }
+    .icon-button:hover { color:var(--violet); border-color:#d5d0ff; transform:translateY(-1px); }
+    .icon-button svg { width:18px; height:18px; }
+    .notification-dot { position:absolute; right:9px; top:8px; width:6px; height:6px; background:#f1798b; border:1.5px solid white; border-radius:50%; }
+    .top-profile { display:flex; align-items:center; gap:9px; margin-left:3px; }
+    .top-profile .avatar { width:34px; height:34px; flex-basis:34px; border-radius:12px; font-size:12px; }
+    .top-profile strong { font-size:11px; display:block; line-height:1.2; }
+    .top-profile small { display:block; color:var(--muted); font-size:10px; margin-top:3px; }
+    .menu-toggle { display:none; }
+    .content { max-width:1500px; margin:0 auto; padding:32px 44px 50px; }
+    .welcome-row { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:24px; }
+    .eyebrow { display:flex; align-items:center; gap:7px; color:#7e73e7; font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; margin-bottom:8px; }
+    .eyebrow span { width:6px; height:6px; border-radius:50%; background:#8275ed; box-shadow:0 0 0 4px #edeaff; }
+    .welcome-row h1 { font-size:26px; letter-spacing:-1.1px; line-height:1.2; margin-bottom:7px; }
+    .welcome-row p { color:var(--muted); margin:0; font-size:13px; }
+    .date-chip { display:flex; align-items:center; gap:9px; border:1px solid #e8eaf2; border-radius:13px; padding:10px 13px; background:#ffffffb8; color:#616b80; font-size:11px; white-space:nowrap; }
+    .date-chip svg { width:16px; color:#8b7df0; }
+    .banner { min-height:198px; border-radius:25px; overflow:hidden; position:relative; padding:30px 34px; color:white; background:linear-gradient(110deg,#5e55cb 0%,#7768e8 47%,#9988f0 100%); box-shadow:0 16px 40px #7061db36; display:flex; align-items:center; }
+    .banner:before,.banner:after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
+    .banner:before { width:370px; height:370px; right:13%; top:-244px; border:1px solid #ffffff20; box-shadow:0 0 0 30px #ffffff08,0 0 0 64px #ffffff06; }
+    .banner:after { width:240px; height:240px; right:-40px; bottom:-147px; background:linear-gradient(135deg,#b3a4ff55,#e5ddff15); }
+    .banner-content { position:relative; z-index:1; max-width:580px; }
+    .banner-tag { display:inline-flex; align-items:center; gap:7px; border:1px solid #ffffff31; background:#ffffff17; border-radius:100px; padding:6px 10px; font-size:10px; font-weight:700; letter-spacing:.4px; margin-bottom:14px; }
+    .banner-tag i { display:block; width:6px; height:6px; border-radius:50%; background:#85efbe; box-shadow:0 0 0 3px #85efbe32; }
+    .banner h2 { font-size:23px; line-height:1.25; letter-spacing:-.7px; margin:0 0 8px; }
+    .banner p { color:#e8e4ff; margin:0 0 19px; font-size:12px; }
+    .banner-button { border:0; background:#fff; color:#5f55c7; border-radius:11px; padding:10px 14px; font-size:11px; font-weight:700; box-shadow:0 7px 15px #4739a333; transition:.2s; }
+    .banner-button:hover { transform:translateY(-2px); box-shadow:0 10px 20px #4739a344; }
+    .banner-art { position:absolute; z-index:1; right:8.5%; bottom:0; width:260px; height:184px; opacity:.92; }
+    .art-building { position:absolute; bottom:0; right:20px; width:165px; height:132px; border-radius:18px 18px 0 0; background:linear-gradient(145deg,#eceaff,#c7c2ff); box-shadow:-12px 8px 30px #453b9a30; }
+    .art-building:before { content:""; position:absolute; top:-18px; left:0; width:100%; height:26px; border-radius:8px 8px 3px 3px; background:#fff; clip-path:polygon(4% 100%,11% 0,89% 0,96% 100%); }
+    .art-building:after { content:""; position:absolute; left:17px; right:17px; top:26px; bottom:0; background:repeating-linear-gradient(90deg,transparent 0 23px,#938bec 23px 38px,transparent 38px 47px),repeating-linear-gradient(0deg,transparent 0 25px,#938bec 25px 40px,transparent 40px 49px); opacity:.62; }
+    .art-ground { position:absolute; right:0; bottom:-23px; width:300px; height:54px; border-radius:50%; background:#5a50bf; }
+    .art-sun { position:absolute; width:55px; height:55px; right:8px; top:10px; border-radius:50%; background:#ffd78c; box-shadow:0 0 0 12px #ffd78c21; }
+    .art-cloud { position:absolute; left:2px; top:48px; width:66px; height:18px; border-radius:30px; background:#fff9; }
+    .art-cloud:before,.art-cloud:after { content:""; position:absolute; border-radius:50%; background:#fff9; }
+    .art-cloud:before { width:27px;height:27px;left:12px;top:-13px; }.art-cloud:after{width:21px;height:21px;right:12px;top:-8px;}
+    .metrics-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin:21px 0 27px; }
+    .metric-card,.card { background:var(--paper); border:1px solid rgba(231,234,243,.9); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .metric-card { padding:18px 19px 16px; min-height:132px; position:relative; overflow:hidden; }
+    .metric-top { display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:11px; font-weight:600; }
+    .metric-icon { width:34px; height:34px; border-radius:12px; display:grid; place-items:center; }
+    .metric-icon svg { width:17px;height:17px; }
+    .icon-violet { background:#f0eeff;color:#7568e8; }.icon-mint{background:#e4f8f0;color:#38b587}.icon-peach{background:#fff1e5;color:#e79652}.icon-blue{background:#e8f2ff;color:#5793dc}
+    .metric-value { margin:12px 0 2px; font-size:24px; font-weight:800; letter-spacing:-.8px; line-height:1.1; }
+    .metric-foot { color:#8b94a7; font-size:10px; }
+    .metric-foot b { color:#3ab886; font-weight:700; }
+    .metric-foot .warn { color:#e7954f; }
+    .section { margin-top:26px; scroll-margin-top:104px; }
+    .section-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:14px; }
+    .section-title { margin:0; font-size:17px; letter-spacing:-.45px; }
+    .section-sub { color:var(--muted); font-size:11px; margin:4px 0 0; }
+    .text-link { display:inline-flex; align-items:center; gap:5px; color:#7062dc; font-size:11px; font-weight:700; border:0; background:transparent; padding:4px 1px; }
+    .text-link svg { width:14px;height:14px; }
+    .overview-grid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(290px,.85fr); gap:17px; }
+    .card { padding:20px; }
+    .attendance-card { min-height:254px; }
+    .card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px; }
+    .card-head h3 { font-size:13px; margin:0 0 4px; letter-spacing:-.2px; }
+    .card-head p { font-size:10px; color:var(--muted); margin:0; }
+    .select-small { border:1px solid #ebedf4; color:#6c7488; padding:7px 10px; border-radius:9px; background:#fff; font-size:10px; outline:none; }
+    .attendance-summary { display:flex; align-items:center; gap:22px; padding:2px 0 10px; }
+    .donut { width:102px;height:102px;border-radius:50%; flex:0 0 102px; display:grid;place-items:center; background:conic-gradient(#7768e8 0 92.4%,#efeff7 92.4% 100%); position:relative; }
+    .donut:before { content:""; position:absolute; inset:9px; background:#fff; border-radius:50%; }
+    .donut span { z-index:1; font-family:'Manrope',sans-serif; font-size:20px; font-weight:800; letter-spacing:-.7px; }
+    .donut span small { display:block; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:9px; font-weight:500; letter-spacing:0; text-align:center; margin-top:-1px; }
+    .att-stats { display:grid; grid-template-columns:1fr 1fr; gap:17px 28px; flex:1; }
+    .att-stat small { display:block; color:var(--muted); font-size:10px; margin-bottom:3px; }
+    .att-stat b { font-family:'Manrope',sans-serif; font-size:17px; letter-spacing:-.3px; }
+    .att-stat .green { color:#30b783; }
+    .mini-bars { height:40px; display:flex; align-items:flex-end; gap:7px; margin:8px 0 0; }
+    .mini-bars span { flex:1; border-radius:4px 4px 1px 1px; background:#d9d5ff; min-height:9px; }
+    .mini-bars span:nth-child(2n) { background:#edeaff; }
+    .mini-bars span.today { background:#7768e8; }
+    .chart-legend { display:flex; justify-content:space-between; color:#9aa2b2; font-size:9px; margin-top:5px; }
+    .timetable-card { padding-bottom:13px; }
+    .today-label { color:#796ce8; background:#f0eeff; border-radius:8px; padding:6px 9px; font-size:9px; font-weight:700; white-space:nowrap; }
+    .class-list { display:grid; }
+    .class-row { display:grid; grid-template-columns:48px 3px 1fr auto; gap:12px; align-items:center; padding:11px 0; border-top:1px solid #f0f1f6; }
+    .class-time { font-size:10px; color:#8b94a7; line-height:1.3; text-align:right; }
+    .class-line { width:3px; height:37px; border-radius:4px; background:#b3a9ff; }
+    .class-row:nth-child(3) .class-line { background:#6ecba4; }.class-row:nth-child(4) .class-line { background:#f2b673; }
+    .class-info b { display:block; font-size:11px; margin-bottom:2px; }.class-info small { color:var(--muted); font-size:9px; }
+    .room-pill { color:#818a9d; background:#f5f6fa; border-radius:7px; padding:5px 7px; font-size:9px; white-space:nowrap; }
+    .quick-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .quick-action { display:flex; align-items:center; gap:11px; width:100%; text-align:left; padding:13px 14px; background:#fff; border:1px solid #e9ebf3; border-radius:15px; box-shadow:0 8px 22px #26335a08; transition:.2s; color:var(--ink); }
+    .quick-action:hover { transform:translateY(-2px); border-color:#d6d0ff; box-shadow:0 12px 26px #5145a516; }
+    .quick-action .metric-icon { width:36px;height:36px; flex:0 0 36px; }.quick-action strong{display:block;font-size:10px;}.quick-action small{display:block;color:var(--muted);font-size:9px;margin-top:2px;}
+    .assignment-list { display:grid; }
+    .assignment-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto auto; gap:13px; align-items:center; padding:13px 0; border-top:1px solid #f0f1f6; }
+    .subject-mark { width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:#f0eeff;color:#7569e6;font-family:'Manrope',sans-serif;font-size:11px;font-weight:800; }
+    .subject-mark.green{background:#e6f8f0;color:#37ac7e}.subject-mark.orange{background:#fff1e4;color:#db9250}.subject-mark.blue{background:#e8f2ff;color:#538bd0}
+    .assignment-name b { display:block; font-size:11px; margin-bottom:3px; }.assignment-name small { color:var(--muted); font-size:9px; }
+    .due { color:#788197; font-size:10px; white-space:nowrap; }.due.soon{color:#df9350}.due.late{color:#df7181}
+    .status { border-radius:7px; padding:5px 8px; font-size:9px; font-weight:700; white-space:nowrap; }.status.pending{background:#fff4e7;color:#d58c48}.status.progress{background:#eeedff;color:#7164d7}.status.done{background:#e6f8f0;color:#31a979}
+    .event-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .event-card { padding:0; overflow:hidden; }
+    .event-art { height:111px; position:relative; overflow:hidden; background:linear-gradient(130deg,#dedbff,#a8a0f2); }
+    .event-art.green { background:linear-gradient(130deg,#d5f4e4,#73c7a0); }.event-art.peach{background:linear-gradient(130deg,#ffe8ce,#f2b678)}
+    .event-art:before { content:"";position:absolute; width:170px;height:170px;right:-22px;top:-76px;border:1px solid #ffffff65;border-radius:50%;box-shadow:0 0 0 18px #ffffff20,0 0 0 38px #ffffff12; }
+    .event-art .art-emoji { position:absolute; right:26px; bottom:-7px; font-size:61px; filter:drop-shadow(0 8px 8px #453b8a30); transform:rotate(-5deg); }
+    .event-date { position:absolute; top:12px; left:13px; border-radius:10px; padding:6px 8px; color:#5e55c7; background:#ffffffdf; text-align:center; min-width:39px; box-shadow:0 4px 12px #312a5730; }
+    .event-date b { font-family:'Manrope',sans-serif; font-size:14px; line-height:1; display:block; }.event-date small{font-size:8px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;}
+    .event-content { padding:13px 15px 15px; }.event-content h3{font-size:12px;margin:0 0 6px;}.event-content p{color:var(--muted);font-size:9px;margin:0 0 9px;}.event-meta{display:flex;gap:10px;color:#8e97a9;font-size:9px;}.event-meta span{display:flex;align-items:center;gap:4px;}.event-meta svg{width:12px;height:12px;color:#8f84ec;}
+    .bus-layout { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr); gap:17px; }
+    .map-panel { min-height:260px; padding:0; position:relative; overflow:hidden; background:#edf5f1; }
+    .map-bg { position:absolute;inset:0;background-color:#edf5f1;background-image:linear-gradient(33deg,transparent 43%,#fff 43.5%,#fff 45%,transparent 45.5%),linear-gradient(116deg,transparent 40%,#fff 40.5%,#fff 42%,transparent 42.5%),linear-gradient(0deg,transparent 54%,#dcebe5 54.5%,#dcebe5 63%,transparent 63.5%),linear-gradient(90deg,transparent 69%,#dcebe5 69.5%,#dcebe5 76%,transparent 76.5%); }
+    .map-label { position:absolute; color:#94a79d; font-size:9px; font-weight:600; letter-spacing:.2px; }.map-label.one{left:15%;top:17%}.map-label.two{right:11%;top:24%}.map-label.three{left:44%;bottom:15%}.map-label.four{left:10%;bottom:28%}
+    .map-route { position:absolute; inset:0; width:100%;height:100%; }
+    .map-status { position:absolute;top:15px;left:16px;display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:9px;background:#ffffffec;color:#3c9c75;font-size:9px;font-weight:700;box-shadow:0 4px 14px #344d3b13; }
+    .map-status i{width:6px;height:6px;background:#38bc86;border-radius:50%;box-shadow:0 0 0 3px #38bc8622;}
+    .bus-marker { position:absolute;left:53%;top:42%;transform:translate(-50%,-50%);width:34px;height:34px;display:grid;place-items:center;border-radius:12px;color:#fff;background:#7162e7;box-shadow:0 6px 16px #5144bf55;border:2px solid white; }
+    .bus-marker svg{width:17px;height:17px;}
+    .map-pin { position:absolute; right:17%;bottom:20%;width:25px;height:25px;display:grid;place-items:center;border-radius:50% 50% 50% 2px;transform:rotate(-45deg);background:#fff;color:#ec7889;box-shadow:0 3px 10px #35463422; }.map-pin svg{width:13px;height:13px;transform:rotate(45deg);}
+    .bus-info { display:flex; flex-direction:column; }
+    .bus-info .card-head { margin-bottom:8px; }
+    .bus-select { width:100%;padding:9px 11px;border-radius:10px;border:1px solid #ebedf4;background:#fff;color:#4e586f;font-size:10px;outline:none;margin-bottom:15px; }
+    .bus-eta { display:flex;align-items:center;justify-content:space-between;background:#f4f2ff;border-radius:13px;padding:12px 13px;margin-bottom:14px; }
+    .bus-eta small{display:block;color:#827aaf;font-size:9px;margin-bottom:2px;}.bus-eta b{font-family:'Manrope',sans-serif;font-size:22px;color:#5d52bd;letter-spacing:-.6px;}.bus-eta .arrival{color:#6e66a5;font-size:9px;}
+    .stop-list { display:grid; gap:11px; margin-top:1px; }
+    .stop { display:flex; align-items:center; gap:9px; font-size:10px; color:#727c90; }.stop i{width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #d9dce7;position:relative;flex:0 0 9px;}.stop.done i{background:#39b989;border-color:#39b989}.stop.current{color:#404963;font-weight:700}.stop.current i{border-color:#7768e8;box-shadow:0 0 0 3px #7768e81d}.stop small{margin-left:auto;color:#9aa2b2;font-size:9px;font-weight:500;}
+    .contact-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px; }
+    .contact-card { display:flex;align-items:center;gap:12px;padding:15px; }
+    .contact-icon { width:39px;height:39px;border-radius:13px;display:grid;place-items:center;color:#e06f84;background:#fff0f2;flex:0 0 39px; }.contact-icon svg{width:18px;height:18px}.contact-icon.security{color:#7467e4;background:#f0eeff}.contact-icon.health{color:#38af81;background:#e8f8f1}
+    .contact-info { min-width:0;flex:1; }.contact-info b{display:block;font-size:10px;margin-bottom:2px}.contact-info small{display:block;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .call-btn { width:31px;height:31px;display:grid;place-items:center;background:#f7f8fb;border:1px solid #eef0f5;color:#738096;border-radius:10px;flex:0 0 31px; }.call-btn:hover{background:#e9f8f0;color:#31a979}.call-btn svg{width:14px;height:14px}
+    .sample-note { margin-top:12px;color:#939bad;font-size:9px; }
+    .footer { text-align:center;color:#a0a7b5;font-size:9px;padding:30px 0 0; }
+    .toast { position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;background:#242541;color:#fff;padding:11px 16px;border-radius:12px;box-shadow:0 12px 30px #1c1c3540;font-size:11px;transition:.25s; }.toast.show{opacity:1;transform:translate(-50%,0)}
+    .notification-panel { display:none;position:absolute;right:112px;top:68px;width:305px;padding:16px;background:#fff;border:1px solid #e9ebf3;border-radius:17px;box-shadow:0 18px 44px #252b5224;z-index:50; }
+    .notification-panel.open { display:block;animation:pop .18s ease-out; }.notification-panel h3{font-size:13px;margin:0 0 12px}.notification-item{display:flex;gap:10px;padding:10px 0;border-top:1px solid #f0f1f6}.notification-item i{width:8px;height:8px;margin-top:4px;border-radius:50%;background:#8275ed;flex:0 0 8px}.notification-item b{display:block;font-size:10px;margin-bottom:3px}.notification-item small{display:block;color:var(--muted);font-size:9px}
+    @keyframes pop { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
+    .no-results { display:none; border:1px dashed #d9dceb; border-radius:14px; padding:18px; color:var(--muted); text-align:center; font-size:11px; margin-top:12px; }
+    [data-searchable].filtered-out { display:none !important; }
+    @media(max-width:1200px) {
+      .content{padding-left:30px;padding-right:30px}.topbar{padding:0 30px}.banner-art{right:4%}.metrics-grid{gap:12px}.metric-card{padding:16px}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:980px) {
+      .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:18px 0 50px #17172b33}.sidebar.open{transform:translateX(0)}.main{width:100%;margin-left:0}.menu-toggle{display:grid}.topbar{height:72px;padding:0 24px}.content{padding:26px 24px 42px}.notification-panel{right:72px;top:62px}.banner-art{right:6%;opacity:.65}.overview-grid{grid-template-columns:1fr 1fr}.bus-layout{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:720px) {
+      .topbar{padding:0 16px;height:66px}.crumb{display:none}.top-actions{margin-left:auto;gap:8px}.search-input{width:min(42vw,205px);height:38px}.icon-button{width:38px;height:38px}.top-profile .profile-label{display:none}.content{padding:23px 16px 35px}.welcome-row{align-items:flex-start;flex-direction:column;gap:13px;margin-bottom:18px}.welcome-row h1{font-size:23px}.date-chip{padding:8px 11px}.banner{min-height:180px;padding:23px;border-radius:21px}.banner h2{font-size:20px;max-width:300px}.banner p{max-width:290px;font-size:11px}.banner-art{right:-25px;opacity:.27;transform:scale(.9);transform-origin:bottom right}.metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0 22px}.metric-card{min-height:119px;padding:14px;border-radius:17px}.metric-value{font-size:22px}.overview-grid,.bus-layout{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.event-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-grid{grid-template-columns:1fr}.section{margin-top:22px}.card{border-radius:18px;padding:16px}.map-panel{min-height:220px}.notification-panel{right:58px;width:min(305px,calc(100vw - 75px))}
+    }
+    @media(max-width:420px) {
+      .top-profile{display:none}.search-input{width:42vw}.search-input::placeholder{color:transparent}.quick-action{padding:11px 10px;gap:8px}.quick-action .metric-icon{width:32px;height:32px;flex-basis:32px}.quick-action strong{font-size:9px}.quick-action small{font-size:8px}.attendance-summary{gap:14px}.donut{width:88px;height:88px;flex-basis:88px}.att-stats{gap:12px}.att-stat b{font-size:15px}.assignment-row{grid-template-columns:36px minmax(0,1fr) auto;gap:9px}.assignment-row .due{grid-column:2;grid-row:2;margin-top:-7px}.assignment-row .status{grid-column:3;grid-row:1/3}.subject-mark{width:34px;height:34px}.event-grid{gap:9px}.event-art{height:90px}.event-content{padding:11px}.event-content h3{font-size:10px}.event-content p{font-size:8px}.class-row{grid-template-columns:42px 3px 1fr auto;gap:9px}.room-pill{font-size:8px;padding:5px}
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important} }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#overview">Skip to project overview</a>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Go to project overview"><span class="brand-mark">17</span><span><strong>Problem Space Review</strong><small>INNOVATION &amp; DESIGN THINKING · 1BIDTL108</small></span></a>
-    <nav class="main-nav" aria-label="Phase navigation">
-      <a href="#overview">Overview</a><a href="#a1">A1 Understand</a><a href="#a2">A2 Observe</a><a href="#a3">A3 Define</a><a href="#site-concept">Site concept</a><a href="#closure">Closure</a>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a class="brand" href="#overview" aria-label="CampusOne home">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 9.5 12 4l9 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-9Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 20v-6.5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1V20M7 9h.01M12 9h.01M17 9h.01" stroke="white" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+      <span class="brand-name">CampusOne<span class="brand-sub">Smart campus assistant</span></span>
+    </a>
+    <p class="nav-label">Workspace</p>
+    <nav class="nav-list">
+      <a class="nav-link active" href="#overview" data-nav><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="5" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="11" width="7" height="10" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="8" height="7" rx="2" stroke="currentColor" stroke-width="1.7"/></svg>Dashboard</a>
+      <a class="nav-link" href="#attendance" data-nav><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8M9 3h6v3H9zM5 5H4v16h16V5h-1M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Attendance</a>
+      <a class="nav-link" href="#timetable" data-nav><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h3M14 14h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Timetable</a>
+      <a class="nav-link" href="#assignments" data-nav><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8M9 3h6v3H9zM6 5H4v16h16V5h-2M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Assignments<span class="nav-badge">3</span></a>
+      <a class="nav-link" href="#events" data-nav><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3ZM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>College events</a>
+      <a class="nav-link" href="#bus" data-nav><svg viewBox="0 0 24 24" fill="none"><path d="M5 17V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V17M5 12h14M7 17v2M17 17v2M7.5 8h.01M16.5 8h.01M7 17h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Campus bus</a>
+      <a class="nav-link" href="#contacts" data-nav><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Emergency contacts</a>
     </nav>
-    <a class="header-status" href="#status"><span></span> RESEARCH PENDING</a>
-  </header>
+    <div class="side-spacer"></div>
+    <div class="help-card"><span class="help-orb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9.1 9a3 3 0 1 1 5.6 1.5c-.9 1.1-2.7 1.5-2.7 3M12 17.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><strong>Need a hand?</strong><p>Find help with your campus day.</p><a href="#contacts">Get support <span aria-hidden="true">→</span></a></div>
+    <div class="profile-mini"><span class="avatar">AS</span><span><strong>Alex Student</strong><small>Computer Science · Year 2</small></span></div>
+  </aside>
 
-  <main id="top">
-    <section class="hero" id="overview" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-rule"></span> BMS INSTITUTE OF TECHNOLOGY AND MANAGEMENT · PHASE I</p>
-        <h1 id="hero-title">Understand the problem<br><em>before defining it.</em></h1>
-        <p class="hero-lede">A problem-space review for the student information-management topic. This page follows the teacher’s A1 Understand, A2 Observe and A3 Define structure.</p>
-        <div class="hero-actions"><a class="button button-primary" href="#a1">Explore the review <span>↓</span></a><a class="text-link" href="#status">See current project status</a></div>
+  <main class="main" id="overview">
+    <header class="topbar">
+      <div class="crumb">Workspace <span aria-hidden="true">/</span> <b>Dashboard</b></div>
+      <div class="top-actions">
+        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <label class="search-wrap"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input class="search-input" id="globalSearch" type="search" placeholder="Search campus…" aria-label="Search campus content"></label>
+        <button class="icon-button" id="notificationToggle" aria-label="Show notifications" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><i class="notification-dot"></i></button>
+        <div class="top-profile"><span class="avatar">AS</span><span class="profile-label"><strong>Alex Student</strong><small>Student account</small></span></div>
       </div>
-      <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>03</span><small>PHASES</small></div>
-      <div class="hero-meta"><span>DEPARTMENT <strong>Artificial Intelligence and Machine Learning</strong></span><span>SCHEME <strong>2025 · I Semester · 2026–27</strong></span><span>PROJECT GUIDE <strong>Srujana S</strong></span></div>
-    </section>
+      <div class="notification-panel" id="notificationPanel" role="dialog" aria-label="Notifications"><h3>Notifications <span class="nav-badge" style="display:inline-grid;background:#f0eeff;color:#7162d9;margin-left:5px">3</span></h3><div class="notification-item"><i></i><span><b>Database Systems starts soon</b><small>Room B-204 · in 20 minutes</small></span></div><div class="notification-item"><i style="background:#efae5f"></i><span><b>Assignment due tomorrow</b><small>Data Structures · Project 2</small></span></div><div class="notification-item"><i style="background:#39b989"></i><span><b>Campus shuttle is on its way</b><small>Route A · arriving in 8 minutes</small></span></div></div>
+    </header>
 
-    <section class="title-band" aria-label="Working project title">
-      <div><p class="section-label">WORKING PROJECT TITLE <span>· PENDING GUIDE REVIEW</span></p><h2>Students Often Struggle To Manage Timetable, Attendance, Assignment, Events, College Information.</h2></div>
-      <div class="team-stamp"><strong>TEAM 17</strong><span>SECTION E</span></div>
-    </section>
+    <div class="content">
+      <div class="welcome-row">
+        <div><div class="eyebrow"><span></span> YOUR CAMPUS, IN SYNC</div><h1>Good morning, Alex <span aria-hidden="true">☀️</span></h1><p>Here’s what’s happening across your campus today.</p></div>
+        <div class="date-chip"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 3v4M17 3v4M3 10h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span id="todayDate">Wednesday, October 16, 2024</span></div>
+      </div>
 
-    <section class="status-section" id="status" aria-labelledby="status-title">
-      <div class="section-heading compact-heading"><div><p class="eyebrow">PROJECT STATUS</p><h2 id="status-title">What is known so far</h2></div><span class="status-chip"><i></i> NOT YET VALIDATED</span></div>
-      <div class="status-grid">
-        <article class="status-item status-known"><span class="status-number">01</span><div><p class="status-label">SUPPLIED BY THE TEAM</p><h3>Topic and project setup</h3><p>Team 17, Section E, the working title and guide name were supplied for this project.</p></div></article>
-        <article class="status-item status-pending"><span class="status-number">02</span><div><p class="status-label">RESEARCH STATUS</p><h3>No student study yet</h3><p>No student interviews or observations have been completed. There are no validated findings to report.</p></div></article>
-        <article class="status-item status-pending"><span class="status-number">03</span><div><p class="status-label">APPROVAL STATUS</p><h3>Problem framing is preliminary</h3><p>The title, target users, final problem statement and objectives still need evidence and guide review.</p></div></article>
-      </div>
-      <div class="status-note"><strong>How to read this page</strong><span>Teacher requirements are shown as review guidance. Team-supplied details are separated from assumptions, proposed research and work still to do.</span></div>
-    </section>
+      <section class="banner" aria-label="Campus update">
+        <div class="banner-content"><div class="banner-tag"><i></i> YOUR CAMPUS, IN SYNC</div><h2>Make today a day<br>to remember.</h2><p>Classes, deadlines, and campus life — all in one place.</p><button class="banner-button" data-scroll="#timetable">See today’s schedule <span aria-hidden="true">→</span></button></div>
+        <div class="banner-art" aria-hidden="true"><div class="art-sun"></div><div class="art-cloud"></div><div class="art-building"></div><div class="art-ground"></div></div>
+      </section>
 
-    <section class="phase-intro" aria-label="Phase roadmap">
-      <p class="eyebrow">PHASE-I ROADMAP</p>
-      <div class="phase-rail"><a href="#a1" class="phase-stop"><span class="phase-code">A1</span><span class="phase-name">Understand</span><small>Clarify the context</small></a><span class="rail-line"></span><a href="#a2" class="phase-stop"><span class="phase-code">A2</span><span class="phase-name">Observe</span><small>Gather user evidence</small></a><span class="rail-line"></span><a href="#a3" class="phase-stop"><span class="phase-code">A3</span><span class="phase-name">Define</span><small>Synthesize the need</small></a></div>
-    </section>
+      <div class="metrics-grid">
+        <article class="metric-card" data-searchable><div class="metric-top"><span>Attendance rate</span><span class="metric-icon icon-violet"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V5M5 19h15M8 15l3-4 3 2 5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="metric-value">92.4%</div><div class="metric-foot"><b>↑ 2.4%</b> <span>from last month</span></div></article>
+        <article class="metric-card" data-searchable><div class="metric-top"><span>Classes today</span><span class="metric-icon icon-mint"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M14 14h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div><div class="metric-value">4 <span style="font-size:12px;color:#8b94a7;font-weight:600">classes</span></div><div class="metric-foot">Next class in <b>20 min</b></div></article>
+        <article class="metric-card" data-searchable><div class="metric-top"><span>Assignments due</span><span class="metric-icon icon-peach"><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8M9 3h6v3H9zM6 5H4v16h16V5h-2M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="metric-value">3 <span style="font-size:12px;color:#8b94a7;font-weight:600">upcoming</span></div><div class="metric-foot"><span class="warn">1 due tomorrow</span></div></article>
+        <article class="metric-card" data-searchable><div class="metric-top"><span>Campus shuttle</span><span class="metric-icon icon-blue"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V17M5 12h14M7 17v2M17 17v2M8 8h.01M16 8h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div><div class="metric-value">8 <span style="font-size:12px;color:#8b94a7;font-weight:600">min</span></div><div class="metric-foot">Route A · <b>on schedule</b></div></article>
+      </div>
 
-    <section class="phase-section" id="a1" aria-labelledby="a1-title">
-      <div class="section-heading"><div class="section-marker marker-a1">A1</div><div><p class="eyebrow">UNDERSTAND</p><h2 id="a1-title">Clarify the problem space</h2><p class="section-lede">The team’s title suggests a possible information-management difficulty. Its causes, impact and specific users still need confirmation.</p></div></div>
-      <div class="two-column">
-        <article class="content-block emphasis-block"><p class="section-label">WORKING HYPOTHESIS <span>· NOT A FINDING</span></p><h3>Students may find it difficult to keep track of several kinds of college information.</h3><p>Test this with students in the selected context before treating it as a fact. Identify which information, tasks and situations matter most to them.</p></article>
-        <article class="content-block"><p class="section-label">SEARCH FIELD TO CLARIFY</p><dl class="definition-list"><div><dt>Who</dt><dd>Which student group experiences the issue most? To be determined.</dd></div><div><dt>Where / when</dt><dd>Which campus setting and moments are relevant? To be observed.</dd></div><div><dt>Current practice</dt><dd>Where students currently find and manage each information type. Not yet documented.</dd></div><div><dt>Why it matters</dt><dd>Effects, frequency and importance must come from evidence.</dd></div></dl></article>
-      </div>
-      <div class="subsection-heading"><span>A12–A15</span><h3>Problem clarification and known / unknowns</h3></div>
-      <div class="knowledge-grid">
-        <article class="knowledge-column"><h4><span class="tiny-dot dot-known"></span>Known from project setup</h4><ul><li>The working topic names timetable, attendance, assignments, events and college information.</li><li>The team reports that student research has not been done yet.</li><li>The project guide is Srujana S; the team is Team 17, Section E.</li></ul></article>
-        <article class="knowledge-column"><h4><span class="tiny-dot dot-unknown"></span>Unknown and to validate</h4><ul><li>Specific target users, their current information sources and the tasks they perform.</li><li>Where breakdowns occur, how often they happen and their impact.</li><li>Possible causes, constraints and which need should be prioritized.</li></ul></article>
-      </div>
-      <div class="subsection-heading"><span>A16–A18</span><h3>Context and cause analysis</h3></div>
-      <div class="analysis-grid">
-        <article class="analysis-item"><span class="analysis-code">A16</span><div><h4>PESTEL</h4><p>Include only political, economic, social, technological, environmental or legal factors with a direct connection to the researched problem.</p><span class="pending-label">ADD EVIDENCE BEFORE COMPLETING</span></div></article>
-        <article class="analysis-item"><span class="analysis-code">A17</span><div><h4>Ishikawa / cause–effect</h4><p>Map causes only after the team has evidence. Do not present possible causes as confirmed reasons.</p><span class="pending-label">CAUSES NOT YET VALIDATED</span></div></article>
-        <article class="analysis-item"><span class="analysis-code">A18</span><div><h4>Understand conclusion</h4><p>Summarize the most useful findings and the questions that the Observe phase needs to answer.</p><span class="pending-label">WAITING FOR STUDY</span></div></article>
-      </div>
-      <p class="teacher-guidance"><span>TEACHER GUIDANCE</span> Use only relevant methods and authentic project-specific information. Do not complete every question mechanically.</p>
-    </section>
+      <section class="section" id="attendance">
+        <div class="section-head"><div><h2 class="section-title">Your overview</h2><p class="section-sub">A quick look at your academic day.</p></div><a class="text-link" href="#attendance-details">Attendance details <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        <div class="overview-grid">
+          <article class="card attendance-card" id="attendance-details" data-searchable><div class="card-head"><div><h3>Attendance snapshot</h3><p>Keep it up — you’re doing great.</p></div><select class="select-small" aria-label="Attendance period"><option>This semester</option><option>Last semester</option></select></div><div class="attendance-summary"><div class="donut"><span>92.4%<small>overall</small></span></div><div class="att-stats"><div class="att-stat"><small>Classes attended</small><b>96 <span style="font-size:10px;color:#929bad;font-weight:500">/ 104</span></b></div><div class="att-stat"><small>Attendance goal</small><b class="green">85%</b></div><div class="att-stat"><small>Current streak</small><b>12 <span style="font-size:10px;color:#929bad;font-weight:500">days</span></b></div><div class="att-stat"><small>Missed classes</small><b>8</b></div></div></div><div class="mini-bars" aria-label="Weekly attendance trend"><span style="height:55%"></span><span style="height:76%"></span><span style="height:68%"></span><span style="height:91%"></span><span style="height:72%"></span><span style="height:100%"></span><span class="today" style="height:83%"></span><span style="height:94%"></span><span style="height:75%"></span><span style="height:100%"></span><span style="height:86%"></span><span style="height:96%"></span></div><div class="chart-legend"><span>Sep 02</span><span>Attendance trend · last 12 weeks</span><span>Today</span></div></article>
+          <article class="card timetable-card" id="timetable" data-searchable><div class="card-head"><div><h3>Today’s timetable</h3><p>4 classes · 2 breaks</p></div><span class="today-label"><span id="timetableDate">TODAY</span></span></div><div class="class-list"><div class="class-row"><div class="class-time">09:00<br>10:00</div><i class="class-line"></i><div class="class-info"><b>Database Systems</b><small>Dr. Meera Rao · Lecture</small></div><span class="room-pill">B-204</span></div><div class="class-row"><div class="class-time">10:30<br>11:30</div><i class="class-line"></i><div class="class-info"><b>Data Structures</b><small>Prof. N. Shah · Lecture</small></div><span class="room-pill">A-108</span></div><div class="class-row"><div class="class-time">12:00<br>13:00</div><i class="class-line"></i><div class="class-info"><b>Computer Networks</b><small>Dr. I. Patel · Lab</small></div><span class="room-pill">Lab 3</span></div><div class="class-row"><div class="class-time">14:00<br>15:00</div><i class="class-line"></i><div class="class-info"><b>Design &amp; Innovation</b><small>Prof. K. Das · Workshop</small></div><span class="room-pill">C-301</span></div></div></article>
+        </div>
+      </section>
 
-    <section class="phase-section phase-observe" id="a2" aria-labelledby="a2-title">
-      <div class="section-heading"><div class="section-marker marker-a2">A2</div><div><p class="eyebrow">OBSERVE</p><h2 id="a2-title">Learn from real student tasks</h2><p class="section-lede">This phase is planned, not completed. Record what students actually do and say in context, then separate observations from interpretation.</p></div></div>
-      <div class="research-alert"><span class="alert-icon">!</span><div><strong>Field research is still to be done</strong><p>There are no dates, participant counts, interviews, field notes or observed results available yet. Leave result sections blank until the team has gathered evidence.</p></div></div>
-      <div class="two-column observe-columns">
-        <article class="content-block"><p class="section-label">A22 · OBSERVATION PLAN</p><h3>Plan the interaction before the visit</h3><dl class="definition-list"><div><dt>Who</dt><dd>Choose a relevant student group with the guide.</dd></div><div><dt>Where / when</dt><dd>Record the real setting and date when the study takes place.</dd></div><div><dt>Task</dt><dd>Ask students to walk through a recent information-finding or planning task.</dd></div><div><dt>Record</dt><dd>Note actions, sources, obstacles and context. Avoid names or identifying details unless permission is given.</dd></div></dl></article>
-        <article class="content-block"><p class="section-label">OPEN-ENDED PROMPTS · PROPOSED</p><h3>Use neutral questions</h3><ul class="prompt-list"><li>“Can you walk me through the last time you needed one of these details?”</li><li>“Where did you look first, and what did you do next?”</li><li>“Was anything confusing or difficult in that situation?”</li><li>“How did you decide which information to trust?”</li></ul><p class="small-note">These are suggested prompts, not answers or findings. Choose only what fits the approved study.</p></article>
-      </div>
-      <div class="subsection-heading"><span>A23–A30</span><h3>Evidence to synthesize after observation</h3></div>
-      <div class="evidence-grid">
-        <article><span>A23–A24</span><h4>Context and experience</h4><p>Describe the setting, people, activities, tools, interactions and relevant physical, cognitive, social or emotional factors.</p></article>
-        <article><span>A25</span><h4>Empathy map</h4><p>Use actual evidence for Think &amp; Feel, Say &amp; Do, Hear, See, Pains and Gains.</p></article>
-        <article><span>A26–A28</span><h4>Methods as applicable</h4><p>Select a walkthrough, heuristic review or critical incident method only if it adds useful evidence.</p></article>
-        <article><span>A29–A30</span><h4>Visit and conclusion</h4><p>Record the date, setting, group, interaction method and recurring insights. State which assumptions changed.</p></article>
-      </div>
-      <div class="empty-evidence"><span class="empty-symbol">A2</span><span><strong>Observation findings will appear here after the study.</strong><small>Current state: no student interviews or observations completed.</small></span><span class="status-chip"><i></i> PENDING</span></div>
-    </section>
+      <section class="section" id="quick-actions"><div class="section-head"><div><h2 class="section-title">Quick actions</h2><p class="section-sub">The things you need, one tap away.</p></div></div><div class="quick-grid">
+        <button class="quick-action" data-scroll="#attendance"><span class="metric-icon icon-violet"><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8M9 3h6v3H9zM5 5H4v16h16V5h-1M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Check attendance</strong><small>View your record</small></span></button>
+        <button class="quick-action" data-scroll="#timetable"><span class="metric-icon icon-mint"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 3v4M17 3v4M3 10h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span><strong>View timetable</strong><small>Plan your classes</small></span></button>
+        <button class="quick-action" data-scroll="#bus"><span class="metric-icon icon-blue"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V17M5 12h14M7 17v2M17 17v2M8 8h.01M16 8h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span><strong>Track campus bus</strong><small>See live shuttle status</small></span></button>
+        <button class="quick-action" data-scroll="#contacts"><span class="metric-icon" style="background:#fff0f2;color:#e16f84"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.7"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span><strong>Emergency help</strong><small>Campus safety contacts</small></span></button>
+      </div></section>
 
-    <section class="phase-section" id="a3" aria-labelledby="a3-title">
-      <div class="section-heading"><div class="section-marker marker-a3">A3</div><div><p class="eyebrow">DEFINE</p><h2 id="a3-title">Turn evidence into a focused problem</h2><p class="section-lede">A persona, needs and point of view should summarize the Understand and Observe evidence. None should be invented before the study.</p></div></div>
-      <div class="define-flow">
-        <article class="define-step"><span class="step-id">A33</span><div><h3>Persona</h3><p>Create a representative user only if the evidence supports one. Include details that affect the problem.</p></div><span class="step-state">NOT CREATED</span></article>
-        <article class="define-step"><span class="step-id">A34</span><div><h3>Customer problems</h3><p>Prioritize observed difficulties by their importance, effect and recurrence. Support each with evidence.</p></div><span class="step-state">NOT PRIORITIZED</span></article>
-        <article class="define-step"><span class="step-id">A35–A36</span><div><h3>Needs and means–end view</h3><p>Connect a supported user need to functional benefits and, where relevant, emotional or social value.</p></div><span class="step-state">NOT DEFINED</span></article>
-      </div>
-      <div class="pov-block"><p class="section-label">A32 · POINT OF VIEW · TEMPLATE</p><p class="pov-formula"><span>[Specific user]</span> needs <span>[evidence-based need]</span> because <span>[key observation or insight]</span>.</p><p class="small-note">Complete this only after synthesizing real observations.</p></div>
-      <div class="two-column final-definition">
-        <article class="content-block"><p class="section-label">FINAL PROBLEM STATEMENT</p><h3>Pending evidence and guide approval</h3><p>The current title is a working framing. The final statement should identify a specific user and context without embedding a predetermined solution.</p></article>
-        <article class="content-block"><p class="section-label">DRAFT PHASE-I OBJECTIVES · FOR GUIDE REVIEW</p><ol class="objective-list"><li>Identify the student group and situations relevant to the topic.</li><li>Document how students currently find and manage the five information types.</li><li>Use observed evidence to prioritize the main difficulty and user need.</li><li>Prepare a focused point of view and problem statement for guide review.</li></ol></article>
-      </div>
-      <div class="scope-strip"><div><span class="section-label">PROPOSED SCOPE</span><p>Student context and current practices for timetable, attendance, assignments, events and college information.</p></div><div><span class="section-label">CONSTRAINTS / ASSUMPTIONS</span><p>Research access and semester limits are not yet documented. The project assumes the topic is worth investigating, pending validation.</p></div></div>
-    </section>
+      <section class="section" id="assignments"><div class="section-head"><div><h2 class="section-title">Upcoming assignments</h2><p class="section-sub">Stay on top of what’s coming up.</p></div><a class="text-link" href="#assignments">View all <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        <article class="card" data-searchable><div class="assignment-list"><div class="assignment-row"><span class="subject-mark">DS</span><span class="assignment-name"><b>Data Structures · Project 2</b><small>Binary trees &amp; traversal algorithms</small></span><span class="due soon">Due tomorrow</span><button class="status pending mark-done" type="button">To do</button></div><div class="assignment-row"><span class="subject-mark green">DB</span><span class="assignment-name"><b>Database Systems · Lab Report</b><small>SQL queries and normalization</small></span><span class="due date-offset" data-offset="5">Due soon</span><button class="status progress mark-done" type="button">In progress</button></div><div class="assignment-row"><span class="subject-mark orange">CN</span><span class="assignment-name"><b>Computer Networks · Quiz 4</b><small>Transport layer protocols</small></span><span class="due date-offset" data-offset="8">Due soon</span><button class="status pending mark-done" type="button">To do</button></div></div></article>
+      </section>
 
-    <section class="concept-section" id="site-concept" aria-labelledby="concept-title">
-      <div class="section-heading"><div class="section-marker marker-concept">+</div><div><p class="eyebrow">OPTIONAL CONCEPT PREVIEW</p><h2 id="concept-title">Features shown on the current site</h2><p class="section-lede">This feature summary is separate from Phase-I findings. The site is a concept demo, not evidence that students need these features.</p></div></div>
-      <div class="feature-list">
-        <article><span>01</span><h3>Dashboard</h3><p>A summary view that brings sample campus information into one starting point.</p></article>
-        <article><span>02</span><h3>Timetable</h3><p>A weekly view of example classes and room details.</p></article>
-        <article><span>03</span><h3>Attendance</h3><p>A subject-wise summary using sample records.</p></article>
-        <article><span>04</span><h3>Assignments</h3><p>A local list for sample due dates and completion status.</p></article>
-        <article><span>05</span><h3>Events and college information</h3><p>Example events and notices shown together.</p></article>
-      </div>
-      <p class="scope-caution">The current site also shows Bus Tracker and Emergency modules. These sit outside the five areas in the working title and need guide-approved scope.</p>
-      <div class="concept-disclaimer"><strong>Demo data only.</strong><span>The site is not connected to official college systems. Its features have not been validated through student research.</span><a href="https://marcomm99-glitch.github.io/STUDENT-CAMPUS-ASSISTANT/" target="_blank" rel="noreferrer">Open the current site ↗</a></div>
-    </section>
+      <section class="section" id="events"><div class="section-head"><div><h2 class="section-title">Happening on campus</h2><p class="section-sub">A few things worth stepping out for.</p></div><a class="text-link" href="#events">All events <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="event-grid">
+        <article class="card event-card" data-searchable><div class="event-art"><span class="event-date"><b data-event-offset="2">18</b><small data-event-month="2">Oct</small></span><span class="art-emoji" aria-hidden="true">🎤</span></div><div class="event-content"><h3>Campus Sound Festival</h3><p>An evening of live music, good food, and great company.</p><div class="event-meta"><span><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2" stroke="currentColor" stroke-width="1.7"/></svg>Central lawn</span><span>6:00 PM</span></div></div></article>
+        <article class="card event-card" data-searchable><div class="event-art green"><span class="event-date"><b data-event-offset="5">21</b><small data-event-month="5">Oct</small></span><span class="art-emoji" aria-hidden="true">🌱</span></div><div class="event-content"><h3>Green Campus Day</h3><p>Join a hands-on afternoon making our campus greener.</p><div class="event-meta"><span><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2" stroke="currentColor" stroke-width="1.7"/></svg>Garden quad</span><span>10:00 AM</span></div></div></article>
+        <article class="card event-card" data-searchable><div class="event-art peach"><span class="event-date"><b data-event-offset="8">24</b><small data-event-month="8">Oct</small></span><span class="art-emoji" aria-hidden="true">💡</span></div><div class="event-content"><h3>Student Startup Mixer</h3><p>Meet the makers turning ambitious ideas into reality.</p><div class="event-meta"><span><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2" stroke="currentColor" stroke-width="1.7"/></svg>Innovation hub</span><span>4:30 PM</span></div></div></article>
+      </div></section>
 
-    <section class="closure-section" id="closure" aria-labelledby="closure-title">
-      <div class="closure-heading"><p class="eyebrow">PHASE-I CLOSURE</p><h2 id="closure-title">Evidence first. Then move to Ideate.</h2><p>Phase-I is ready to close when the team has defined a validated problem, a clear user need and the guide-reviewed next step.</p></div>
-      <div class="closure-items"><article><span>A37</span><h3>SDG relevance</h3><p>Pending. Include only a goal with a direct, explained link to the defined problem.</p></article><article><span>REFERENCES</span><h3>Sources</h3><p>Add only sources actually used for background, evidence, methods or existing practices.</p></article><article><span>NEXT PHASE</span><h3>Ideate</h3><p>Begin solution-space work after the problem has been understood, observed and defined.</p></article></div>
-      <p class="no-prototype-note">The presentation guide states that prototype development and test results are not Phase-I requirements.</p>
-    </section>
+      <section class="section" id="bus"><div class="section-head"><div><h2 class="section-title">Campus bus tracker</h2><p class="section-sub">Your next ride is getting closer.</p></div><a class="text-link" href="#bus">All routes <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="bus-layout">
+        <article class="card map-panel" data-searchable><div class="map-bg"></div><span class="map-label one">NORTH GATE</span><span class="map-label two">LIBRARY</span><span class="map-label three">STUDENT CENTER</span><span class="map-label four">SPORTS COMPLEX</span><svg class="map-route" viewBox="0 0 700 280" preserveAspectRatio="none" aria-hidden="true"><path d="M90 210 C160 190 165 95 280 118 S390 220 470 132 S540 75 620 95" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/><path d="M90 210 C160 190 165 95 280 118 S390 220 470 132 S540 75 620 95" fill="none" stroke="#786bea" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 1"/><circle cx="90" cy="210" r="7" fill="#fff" stroke="#42ba89" stroke-width="4"/><circle cx="280" cy="118" r="7" fill="#fff" stroke="#42ba89" stroke-width="4"/><circle cx="470" cy="132" r="7" fill="#fff" stroke="#42ba89" stroke-width="4"/><circle cx="620" cy="95" r="7" fill="#fff" stroke="#ec7889" stroke-width="4"/></svg><span class="map-status"><i></i> LIVE · ROUTE A</span><span class="bus-marker"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V17M5 12h14M7 17v2M17 17v2M8 8h.01M16 8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="map-pin"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9" r="2" stroke="currentColor" stroke-width="2"/></svg></span></article>
+        <article class="card bus-info" data-searchable><div class="card-head"><div><h3>Shuttle status</h3><p>Updated just now</p></div></div><label class="sr-only" for="routeSelect">Choose a bus route</label><select class="bus-select" id="routeSelect"><option value="A">Route A · North Gate loop</option><option value="B">Route B · Residence loop</option><option value="C">Route C · City connector</option></select><div class="bus-eta"><span><small>Next shuttle in</small><b id="eta">8 <span style="font-size:12px">min</span></b></span><span class="arrival">Arriving at<br><strong id="arrivalStop">Library stop</strong></span></div><div class="stop-list"><div class="stop done"><i></i>North Gate <small>Passed</small></div><div class="stop current"><i></i>Library stop <small>2 min</small></div><div class="stop"><i></i>Student Center <small>5 min</small></div><div class="stop"><i></i>South Residence <small>8 min</small></div></div></article>
+      </div></section>
+
+      <section class="section" id="contacts"><div class="section-head"><div><h2 class="section-title">Emergency contacts</h2><p class="section-sub">Help is close when you need it.</p></div><span class="today-label">AVAILABLE 24/7</span></div><div class="contact-grid">
+        <article class="card contact-card" data-searchable><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 18a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.2 3.2 2 2 0 0 1 4.2 1h3a2 2 0 0 1 2 1.7l.5 3.2a2 2 0 0 1-.6 1.7L7.5 9.2a16 16 0 0 0 7.3 7.3l1.6-1.6a2 2 0 0 1 1.7-.6l3.2.5a2 2 0 0 1 1.7 2.1Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="contact-info"><b>Emergency services</b><small>National emergency number</small></span><a class="call-btn" href="tel:112" aria-label="Call emergency services at 112"><svg viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 18a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.2 3.2 2 2 0 0 1 4.2 1h3a2 2 0 0 1 2 1.7l.5 3.2a2 2 0 0 1-.6 1.7L7.5 9.2a16 16 0 0 0 7.3 7.3l1.6-1.6a2 2 0 0 1 1.7-.6l3.2.5a2 2 0 0 1 1.7 2.1Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article>
+        <article class="card contact-card" data-searchable><span class="contact-icon security"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.7"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="contact-info"><b>Campus security desk</b><small>Demo contact · update with campus number</small></span><a class="call-btn demo-call" href="#contacts" aria-label="Campus security contact placeholder"><svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4m0 4h.01M10.3 3.8 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.8a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article>
+        <article class="card contact-card" data-searchable><span class="contact-icon health"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="contact-info"><b>Campus health center</b><small>Demo contact · update with campus number</small></span><a class="call-btn demo-call" href="#contacts" aria-label="Campus health center contact placeholder"><svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4m0 4h.01M10.3 3.8 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.8a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article>
+      </div><p class="sample-note">Sample dashboard data for the prototype. Update campus details, timetable, routes, and contact numbers before sharing.</p></section>
+      <div class="no-results" id="noResults">No matching campus information found. Try a different search.</div>
+      <footer class="footer">Made for your campus day · CampusOne</footer>
+    </div>
   </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+  (() => {
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const notifToggle = document.getElementById('notificationToggle');
+    const notifPanel = document.getElementById('notificationPanel');
+    const search = document.getElementById('globalSearch');
+    const toast = document.getElementById('toast');
+    let toastTimer;
 
-  <footer class="site-footer"><div><strong>TEAM 17 · SECTION E</strong><span>Shashank Soni · Puneeth G.R · Shikar B.R · Sagar K.A.S</span></div><div><strong>PROJECT GUIDE</strong><span>Srujana S</span></div><div><strong>COURSE</strong><span>Innovation and Design Thinking · 1BIDTL108</span></div><a href="#top" class="back-top">BACK TO TOP ↑</a></footer>
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+    function closeMenu() {
+      sidebar.classList.remove('open');
+      menuToggle?.setAttribute('aria-expanded', 'false');
+    }
+    menuToggle?.addEventListener('click', () => {
+      const open = sidebar.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+    });
+    document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => {
+      document.querySelectorAll('[data-nav]').forEach(item => item.classList.remove('active'));
+      link.classList.add('active');
+      closeMenu();
+    }));
+    document.querySelectorAll('[data-scroll]').forEach(button => button.addEventListener('click', () => {
+      const target = document.querySelector(button.getAttribute('data-scroll'));
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      closeMenu();
+    }));
+    notifToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = notifPanel.classList.toggle('open');
+      notifToggle.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', event => {
+      if (!notifPanel.contains(event.target) && !notifToggle.contains(event.target)) {
+        notifPanel.classList.remove('open');
+        notifToggle.setAttribute('aria-expanded', 'false');
+      }
+      if (window.innerWidth <= 980 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) closeMenu();
+    });
+    search.addEventListener('input', () => {
+      const query = search.value.trim().toLowerCase();
+      const items = [...document.querySelectorAll('[data-searchable]')];
+      let count = 0;
+      items.forEach(item => {
+        const match = !query || item.textContent.toLowerCase().includes(query);
+        item.classList.toggle('filtered-out', !match);
+        if (match) count++;
+      });
+      document.getElementById('noResults').style.display = query && count === 0 ? 'block' : 'none';
+    });
+    document.querySelectorAll('.mark-done').forEach(button => button.addEventListener('click', () => {
+      if (button.classList.contains('done')) {
+        button.className = 'status pending mark-done';
+        button.textContent = 'To do';
+        showToast('Assignment moved back to your to-do list.');
+      } else {
+        button.className = 'status done mark-done done';
+        button.textContent = 'Submitted';
+        showToast('Assignment marked as submitted.');
+      }
+    }));
+    document.querySelectorAll('.demo-call').forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      showToast('Add your campus contact number here.');
+    }));
+    document.getElementById('routeSelect').addEventListener('change', event => {
+      const routes = {
+        A: { eta: '8', stop: 'Library stop' },
+        B: { eta: '5', stop: 'Residence stop' },
+        C: { eta: '12', stop: 'City connector' }
+      };
+      const selected = routes[event.target.value];
+      document.getElementById('eta').innerHTML = `${selected.eta} <span style="font-size:12px">min</span>`;
+      document.getElementById('arrivalStop').textContent = selected.stop;
+      document.querySelector('.map-status').innerHTML = `<i></i> LIVE · ROUTE ${event.target.value}`;
+      showToast(`Showing Route ${event.target.value} shuttle updates.`);
+    });
+    const date = new Date();
+    document.getElementById('todayDate').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(date);
+    document.getElementById('timetableDate').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'short', month: 'short', day: 'numeric' }).format(date).toUpperCase();
+    document.querySelectorAll('.date-offset').forEach(node => {
+      const due = new Date(date); due.setDate(date.getDate() + Number(node.dataset.offset));
+      node.textContent = `Due ${new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(due)}`;
+    });
+    document.querySelectorAll('[data-event-offset]').forEach(node => {
+      const eventDate = new Date(date); eventDate.setDate(date.getDate() + Number(node.dataset.eventOffset));
+      node.textContent = new Intl.DateTimeFormat(undefined, { day: 'numeric' }).format(eventDate);
+    });
+    document.querySelectorAll('[data-event-month]').forEach(node => {
+      const eventDate = new Date(date); eventDate.setDate(date.getDate() + Number(node.dataset.eventMonth));
+      node.textContent = new Intl.DateTimeFormat(undefined, { month: 'short' }).format(eventDate);
+    });
+  })();
+</script>
 </body>
 </html>
